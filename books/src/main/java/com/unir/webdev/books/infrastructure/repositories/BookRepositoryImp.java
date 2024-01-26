@@ -7,6 +7,7 @@ import com.unir.webdev.books.infrastructure.persistence.entity.BookEntity;
 import com.unir.webdev.books.infrastructure.persistence.entity.valueObjects.Available;
 import com.unir.webdev.books.infrastructure.persistence.filter.BookSpec;
 import com.unir.webdev.books.infrastructure.persistence.mappers.BookMapper;
+import io.vavr.control.Either;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -45,12 +46,14 @@ public class BookRepositoryImp implements BookRepository {
     }
 
     @Override
-    public List<UUID> changeUnavailabilityOf(List<UUID> books) {
-        return books.stream()
-                    .map(bookRepositoryJPA :: findById)
-                    .map(bookEntity -> bookEntity.get().makeUnavailable())
-                    .map(bookRepositoryJPA :: save)
-                    .map(BookEntity :: bookId).toList();
+    public Either<Object, UUID> changeToUnavailability(UUID book) {
+        return Optional.of(book)
+                       .flatMap(bookRepositoryJPA :: findById)
+                       .map(BookEntity :: makeUnavailable)
+                        .map(bookRepositoryJPA :: save)
+                       .map(BookEntity :: bookId)
+                .map(Either :: right)
+                .orElse(Either.left(""));
     }
 
     @Override

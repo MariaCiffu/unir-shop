@@ -1,19 +1,17 @@
 package com.unir.webdev.books.infrastructure.controllers;
 
 import com.unir.webdev.books.application.ChangeAvailabilityUseCase;
-import com.unir.webdev.books.domain.response.Result;
 import com.unir.webdev.books.infrastructure.controllers.DTO.request.ChangeAvailabilityRequest;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,20 +22,14 @@ public class ChangeAvailabilityBookController {
 
     @PostMapping ("/changeAvailability")
     public ResponseEntity<?> handle(@RequestBody ChangeAvailabilityRequest changeAvailabilityRequest) {
-        return Optional.ofNullable(changeAvailabilityRequest)
-                       .filter(ChangeAvailabilityRequest :: existBooks)
-                       .map(ChangeAvailabilityRequest :: booksID)
-                       .map(changeAvailabilityUseCase :: changeAvailability)
-                       .map(ChangeAvailabilityBookController :: buildResponse)
-                       .orElse(ResponseEntity.badRequest()
-                                                      .body("Bad Request given "));
-    }
+        return Option.of(changeAvailabilityRequest)
+                     .filter(ChangeAvailabilityRequest :: existBooks)
+                     .map(ChangeAvailabilityRequest :: booksID)
+                     .map(uuids -> List.ofAll(uuids))
+                     .map(changeAvailabilityUseCase :: changeAvailability)
+                     .map(booleans -> booleans.isLeft() ? ResponseEntity.badRequest()
+                                                                        .body(booleans.getLeft()) : ResponseEntity.ok("availability changed"))
+                     .get();
 
-    @NotNull
-    private static ResponseEntity<Object> buildResponse(Result<String, Object> stringObjectsResult) {
-        return stringObjectsResult.isSuccess() ?
-               ResponseEntity.ok(stringObjectsResult.getSuccess()) :
-               ResponseEntity.badRequest()
-                             .body(stringObjectsResult.getError());
     }
 }

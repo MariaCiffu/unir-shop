@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  requestDocker:
+    profiles: [ "docker" ]
+    container_name: requestDocker
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_EUREKA_URL=eurekaDocker
+    image: kevinsantiagorey/unir_requests:v.0.1
+    ports:
+      - "8081:8081"
+    networks:
+      - eureka_unirEureka
+
+  web:
+    profiles: [ "deploy" ]
+    container_name: books
+    image: kevinsantiagorey/unir_books:v.0.2
+    ports:
+      - "8082:8082"
+    networks:
+      - eureka_unirEureka
+
+  db:
+    profiles: [ "dev" ]
+    container_name: db
+    image: postgres
+    environment:
+      POSTGRES_DB: noticity
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - eureka_unirEureka
+
+  pgadmin:
+    profiles: [ "dev" ]
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - eureka_unirEureka
+    restart: unless-stopped
+    depends_on:
+      - db
+
+
+networks:
+  eureka_unirEureka:
+    external: true

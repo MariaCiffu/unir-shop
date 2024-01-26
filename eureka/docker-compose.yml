@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  eurekaDocker:
+    profiles: [ "docker" ]
+    container_name: eurekaDocker
+    image: kevinsantiagorey/unir_requests:v.0.1
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8082"
+    networks:
+      - unirEureka
+
+  web:
+    profiles: [ "deploy" ]
+    container_name: books
+    image: kevinsantiagorey/unir_eureka:v.0.3
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - "8082:8761"
+    networks:
+      - unirEureka
+
+
+networks:
+  unirEureka:
+    driver: bridge

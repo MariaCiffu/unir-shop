@@ -2,16 +2,17 @@ package com.unir.webdev.books.application;
 
 import com.unir.webdev.books.domain.events.BookEvents;
 import com.unir.webdev.books.domain.repository.BookRepository;
-import com.unir.webdev.books.domain.response.Result;
+import io.vavr.collection.List;
+import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.function.BiFunction;
 
 @Service
 @RequiredArgsConstructor
@@ -20,19 +21,29 @@ public class RequestBookUseCase {
     BookEvents bookEvents;
     BookRepository bookRepository;
 
-    public Result<String, Object> requestBooks(List<UUID> books) {
-        return Optional.of(books.stream()
-                                .filter(bookRepository :: isValidBook)
-                                .filter(bookRepository :: areAvailable)
-                                .collect(Collectors.toList()))
-                       .filter(list -> ! list.isEmpty())
-                       .map(bookRepository :: changeUnavailabilityOf)
-                       .map(this :: sendEvents)
-                       .map(aBoolean -> Result.success("saved data"))
-                       .orElse(Result.error("Bad Request"));
+    public Either<String, Boolean> requestBooks(List<UUID> books) {
+        return validateData(books) ? Either.left("No valid Data") :
+               books.map(bookRepository :: changeToUnavailability)
+                                      .foldLeft(Either.right(null), getError())
+                                      .isLeft() ? Either.left("") : sendEvents(books);
     }
 
-    private boolean sendEvents(List<UUID> books) {
-        return bookEvents.requestBooksCreation(books);
+    @NotNull
+    private static BiFunction<Either<Object, Object>, Either<Object, UUID>,
+            Either<Object, Object>> getError() {
+        return (acc, object) -> acc.isLeft() ? acc : object.isLeft() ? Either.left(
+                "impossible change availability") : Either.right("");
+    }
+
+    private boolean validateData(List<UUID> books) {
+        return books.filter(bookRepository :: isValidBook)
+                    .filter(bookRepository :: areAvailable)
+                    .isEmpty();
+    }
+
+    private Either<String, Boolean> sendEvents(List<UUID> books) {
+        return Try.of(() -> bookEvents.requestBooksCreation(books.asJava()))
+                  .onFailure(throwable -> books.forEach(bookRepository :: changeAvailabilityOf))
+                  .toEither("Create Event Failed");
     }
 }

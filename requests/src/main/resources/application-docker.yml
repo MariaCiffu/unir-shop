@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: requests
+  datasource:
+    url: jdbc:h2:mem:orders
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${SPRING_EUREKA_URL}:8761/eureka/
+
+

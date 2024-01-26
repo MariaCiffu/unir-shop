@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  web:
+    profiles: [ "deploy" ]
+    container_name: web
+    build:
+      context: ./
+    ports:
+      - "80:3000"
+
+    networks:
+      - unir_eureca
+    depends_on:
+      - db
+      - pgadmin
+
+  db:
+    profiles: [ "deploy","dev" ]
+    container_name: db
+    image: postgres
+    environment:
+      POSTGRES_DB: noticity
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: admin
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - unir_eureca
+
+  pgadmin:
+    profiles: [ "deploy","dev" ]
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - unir_eureca
+    restart: unless-stopped
+    depends_on:
+      - db
+
+
+networks:
+  unir_eureca:
+    driver: bridge

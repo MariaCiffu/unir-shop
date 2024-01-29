@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ###Gateway:GetAll:Requests
-POST http://localhost:9191/api/v1/requests/all
+POST http://localhost:9191/api/v1/requests
 Content-Type: application/json
 
 {
@@ -98,7 +98,7 @@ Content-Type: application/json
 }
 
 ###Gateway:Create:Requests
-POST http://localhost:9191/api/v1/requests/create
+POST http://localhost:9191/api/v1/requests
 Content-Type: application/json
 
 {

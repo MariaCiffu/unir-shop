@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults (makeFinal = true, level = AccessLevel.PRIVATE)
 public class RegisterNewRequestUseCase {
 
     RequestRepository requestRepository;

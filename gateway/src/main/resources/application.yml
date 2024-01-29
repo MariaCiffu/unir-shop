@@ -24,5 +24,14 @@ spring:
           uri: lb://REQUESTS
           predicates:
             - Path=/api/v1/requests/**
-
-
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - ${ALLOWED_ORIGINS:*}
+            allowed-headers:
+              - "*"
+            allowed-methods:
+              - POST

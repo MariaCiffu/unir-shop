@@ -10,10 +10,19 @@ import java.util.UUID;
 @Repository
 public interface BookRepository {
 
-    List<Book> getAllProducts();
-    List<Book> getAllProductsBy(String name, String author);
+    List<Book> getAllBooks();
+
+    List<Book> getBooksBy(String name, String author);
+
     Boolean isValidBook(UUID bookID);
-    Either<Object, UUID> changeToUnavailability(UUID books);
-    void changeAvailabilityOf(UUID book);
+
+    Either<String, UUID> changeToUnavailability(UUID books);
+
+    UUID changeAvailabilityOf(UUID book);
+
+    Either<String, Book> updateBook(Book book);
+
+    Either<String, Book> createBook(Book book);
+
     boolean areAvailable(UUID book);
 }

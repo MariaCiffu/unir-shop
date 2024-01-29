@@ -13,10 +13,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults (level = AccessLevel.PRIVATE, makeFinal = true)
 public class GetAllBooksUseCase {
     BookRepository bookRepository;
-    public @NotNull Result<List<Book>, Object> getAllProducts(){
-        return Result.success(bookRepository.getAllProducts());
+
+    public @NotNull Result<List<Book>, Object> getAllProducts() {
+        return Result.success(bookRepository.getAllBooks());
     }
 }

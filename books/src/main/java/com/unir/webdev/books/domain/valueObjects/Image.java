@@ -1,4 +1,3 @@
 package com.unir.webdev.books.domain.valueObjects;
 
-public record Image(String url) {
-}
+public record Image(String url) {}

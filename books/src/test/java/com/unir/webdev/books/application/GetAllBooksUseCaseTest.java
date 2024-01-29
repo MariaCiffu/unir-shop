@@ -23,23 +23,20 @@ class GetAllBooksUseCaseTest {
 
     /*@Property
     void nameIsAddedToHello(@ForAll @AlphaChars @StringLength (min = 1) String name) {
-        String greeting = getAllBooksUseCase.getAllProducts(name);
+        String greeting = getAllBooksUseCase.getAllBooks(name);
         Assertions.assertTrue(greeting.contains(name));
     }*/
     @Test
     void getAllProducts() {
-        Mockito.when(bookRepository.getAllProducts())
+        Mockito.when(bookRepository.getAllBooks())
                .thenReturn(List.of(new Book()));
         Result<List<Book>, Object> allProducts = getAllBooksUseCase.getAllProducts();
         Assertions.assertAll(
                 () -> Assertions.assertTrue(allProducts.isSuccess(), "El resultado " +
-                                                                     "debería ser un " +
-                                                                     "éxito"),
+                                                                     "debería ser un " + "éxito"),
 
                 () -> Assertions.assertEquals(1, allProducts.getSuccess()
                                                             .size(), "El " + "tama" +
-                                                                     "ño de" + " la " +
-                                                                     "lista de éxito " +
-                                                                     "debería ser 1"));
+                                                                     "ño de" + " la " + "lista de éxito " + "debería ser 1"));
     }
 }

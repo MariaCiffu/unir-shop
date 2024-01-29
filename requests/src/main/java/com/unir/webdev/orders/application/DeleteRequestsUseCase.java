@@ -15,14 +15,15 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults (makeFinal = true, level = AccessLevel.PRIVATE)
 public class DeleteRequestsUseCase {
     RequestRepository requestRepository;
     ChangeAvailabilityEvent changeAvailabilityEvent;
-    public Result<String, Object> deleteRequest(UUID requestID){
+
+    public Result<String, Object> deleteRequest(UUID requestID) {
         return Optional.ofNullable(requestID)
-                       .filter(uuid -> !requestRepository.unknownRequest(uuid))
-                       .filter(uuid -> !requestRepository.isEmptyRequest(requestID))
+                       .filter(uuid -> ! requestRepository.unknownRequest(uuid))
+                       .filter(uuid -> ! requestRepository.isEmptyRequest(requestID))
                        .map(this :: deleteRequestProcess)
                        .map(this :: sendEventChangeAvailability)
                        .orElse(Result.error("Not Valid data"));

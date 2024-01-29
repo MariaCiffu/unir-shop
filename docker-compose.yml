@@ -14,12 +14,12 @@ services:
       - db
       - pgadmin
 
-  db:
+  db_request:
     profiles: [ "deploy","dev" ]
-    container_name: db
+    container_name: db_request
     image: postgres
     environment:
-      POSTGRES_DB: noticity
+      POSTGRES_DB: requests
       POSTGRES_USER: root
       POSTGRES_PASSWORD: admin
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     networks:
       - unir_eureca
 
-  pgadmin:
+  pgadmin_request:
     profiles: [ "deploy","dev" ]
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -44,7 +44,7 @@ services:
       - unir_eureca
     restart: unless-stopped
     depends_on:
-      - db
+      - db_request
 
 
 networks:

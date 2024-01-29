@@ -1,7 +1,6 @@
 package com.unir.webdev.books.infrastructure.controllers;
 
 import com.unir.webdev.books.application.RequestBookUseCase;
-import com.unir.webdev.books.domain.response.Result;
 import com.unir.webdev.books.infrastructure.controllers.DTO.request.BooksIdVerificationRequest;
 import io.vavr.collection.List;
 import io.vavr.control.Either;
@@ -23,21 +22,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class RequestBooksController {
     RequestBookUseCase requestBookUseCase;
 
+    @NotNull
+    private static ResponseEntity<String> buildResponse(Either<String, Boolean> booleans) {
+        return booleans.isLeft() ? ResponseEntity.badRequest()
+                                                 .body(booleans.getLeft())
+                                 : ResponseEntity.ok("Request successfully");
+    }
+
     @PostMapping ("/request")
-    public ResponseEntity<?> verifyIds(@RequestBody BooksIdVerificationRequest booksIdVerificationRequest) {
+    public ResponseEntity<?> createRequest(@RequestBody BooksIdVerificationRequest booksIdVerificationRequest) {
         return Option.of(booksIdVerificationRequest)
                      .filter(BooksIdVerificationRequest :: isNotNullBooksID)
                      .map(BooksIdVerificationRequest :: booksID)
                      .map(List :: ofAll)
                      .map(booksId -> requestBookUseCase.requestBooks(booksId))
                      .map(RequestBooksController :: buildResponse)
-                .getOrElse(ResponseEntity.badRequest().body("Not Required data"));
-    }
-
-    @NotNull
-    private static ResponseEntity<String> buildResponse(Either<String, Boolean> booleans) {
-        return booleans.isLeft() ? ResponseEntity.badRequest()
-                                                 .body(booleans.getLeft()) : ResponseEntity.ok("Request successfully");
+                     .getOrElse(ResponseEntity.badRequest()
+                                              .body("Not Required data"));
     }
 
 }

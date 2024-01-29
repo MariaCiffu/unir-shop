@@ -1,59 +1,103 @@
-### Libros Filtrados
-GET http://localhost:8082/api/v1/books/filterBy?author=Jane&name=
+########################
+######## MS Books
+########################
+
+### Todos los libros
+GET http://localhost:8082/api/v1/books
 Content-Type: application/json
 
 ### Todos los libros
-GET http://localhost:8082/api/v1/books/all
+GET http://localhost:8082/api/v1/books?name=Orgullo
 Content-Type: application/json
 
-###HealthCheck Request
-GET http://localhost:8081/api/v1/request
+### Todos los libros
+GET http://localhost:8082/api/v1/books?name=Cien
 Content-Type: application/json
-
-### Crear Peitcion de Libros
-POST http://localhost:8081/api/v1/requests/create
-Content-Type: application/json
-
-{
-  "booksID": ["e568e3f5-6d12-4b6e-a9ca-931872ad4d53"]
-}
 
 ### Verificar: ShopCar
 POST http://localhost:8082/api/v1/books/verify
 Content-Type: application/json
 
 {
-  "booksID": ["a6cf2efe-f2d1-4b3d-9e92-d0c2283f2e0a"]
+  "booksID": [
+    "c675c27e-1150-4360-b5ef-630797f6c08a"
+  ]
 }
 
 
-### Todo: Create:Book
+### Create:Book
+POST http://localhost:8082/api/v1/books
+Content-Type: application/json
+
+{
+  "name": "Creacion el maravilloso libro",
+  "isbn": "13123-13413-1234",
+  "image": "url de imagen",
+  "author": "author",
+  "releaseYear": 2023,
+  "language": "Spanisch",
+  "rate": 3.4
+}
 
 ### TODO: Delete:Book
 
-### TODO: Update:Book
+###Update:Book
+PUT http://localhost:8082/api/v1/books/6f22c294-5611-4806-8c53-a6e3531802ab
+Content-Type: application/json
 
+{
+  "name": "Actualizado el maravilloso libro",
+  "isbn": "13123-13413-1234",
+  "image": "url de imagen",
+  "author": "author",
+  "releaseYear": 2023,
+  "language": "Spanisch",
+  "rate": 3.4,
+  "available": true
+}
 
 ### Compra:Books
 POST http://localhost:8082/api/v1/books/request
 Content-Type: application/json
 
 {
-  "booksID": ["6c7a8b35-368c-4de8-875e-954131a485ba"]
+  "booksID": [
+    "5a436c89-a86f-42ca-9389-39d8842a20e2"
+  ]
 }
 
-###All:Request
-GET http://localhost:8081/api/v1/requests/all
-Content-Type: application/json
-
-### Delete:Request
-DELETE http://localhost:8081/api/v1/requests?requestUUID=cd16a22f-b359-4927-8bc9-73ddec3be46c
-Content-Type: application/json
-
-###ChangeAvailability:Book
-POST http://localhost:8082/api/v1/books/changeAvailability
+### ChangeAvailability:Book
+PATCH http://localhost:8082/api/v1/books/availability
 Content-Type: application/json
 
 {
-  "booksID": ["6c7a8b35-368c-4de8-875e-954131a485ba"]
+  "booksID": [
+    "c675c27e-1150-4360-b5ef-630797f6c08a"
+  ]
+}
+
+########################
+######## MS Request
+########################
+
+###All:Request
+GET http://localhost:8081/api/v1/requests
+Content-Type: application/json
+
+### Delete:Request
+DELETE http://localhost:8081/api/v1/requests/ba62032c-bf30-4933-ad34-6857f68dbdae
+Content-Type: application/json
+
+###HealthCheck Request
+GET http://localhost:8081/api/v1/request/check
+Content-Type: application/json
+
+### Crear Peitcion de Libros
+POST http://localhost:8081/api/v1/requests
+Content-Type: application/json
+
+{
+  "booksID": [
+    "1b4405d6-7c42-4ec6-b232-9637442ac47c"
+  ]
 }

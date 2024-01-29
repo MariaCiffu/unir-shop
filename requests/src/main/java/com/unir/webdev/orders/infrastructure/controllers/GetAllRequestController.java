@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/requests")
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequestMapping ("api/v1/requests")
+@FieldDefaults (makeFinal = true, level = AccessLevel.PRIVATE)
 public class GetAllRequestController {
     GetAllRequestsUseCase getAllRequestsUseCase;
-    @GetMapping("all")
-    public ResponseEntity<?> getAllRequest(){
+
+    @GetMapping ("")
+    public ResponseEntity<?> getAllRequest() {
         return ResponseEntity.ok(getAllRequestsUseCase.getAllRequest());
     }
 }

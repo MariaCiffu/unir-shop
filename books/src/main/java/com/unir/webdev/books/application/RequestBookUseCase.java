@@ -8,11 +8,9 @@ import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
-import java.util.function.BiFunction;
 
 @Service
 @RequiredArgsConstructor
@@ -22,28 +20,18 @@ public class RequestBookUseCase {
     BookRepository bookRepository;
 
     public Either<String, Boolean> requestBooks(List<UUID> books) {
-        return validateData(books) ? Either.left("No valid Data") :
-               books.map(bookRepository :: changeToUnavailability)
-                                      .foldLeft(Either.right(null), getError())
-                                      .isLeft() ? Either.left("") : sendEvents(books);
+        var map = books.filter(bookRepository :: isValidBook)
+                       .filter(bookRepository :: areAvailable)
+                       .map(bookRepository :: changeToUnavailability)
+                       .map(uuids -> uuids.isRight() ? uuids.get() : null);
+        return map.isEmpty() ? Either.left("invalid Ids") : sendEvents(map);
+
     }
 
-    @NotNull
-    private static BiFunction<Either<Object, Object>, Either<Object, UUID>,
-            Either<Object, Object>> getError() {
-        return (acc, object) -> acc.isLeft() ? acc : object.isLeft() ? Either.left(
-                "impossible change availability") : Either.right("");
-    }
-
-    private boolean validateData(List<UUID> books) {
-        return books.filter(bookRepository :: isValidBook)
-                    .filter(bookRepository :: areAvailable)
-                    .isEmpty();
-    }
 
     private Either<String, Boolean> sendEvents(List<UUID> books) {
         return Try.of(() -> bookEvents.requestBooksCreation(books.asJava()))
                   .onFailure(throwable -> books.forEach(bookRepository :: changeAvailabilityOf))
-                  .toEither("Create Event Failed");
+                  .toEither("Send Event For Request Books Failed");
     }
 }

@@ -1,0 +1,117 @@
+####GATEWAY
+
+###Gateway:GetAll:Books
+POST http://localhost:9191/api/v1/books
+Content-Type: application/json
+
+{
+  "httpMethod": "GET"
+}
+
+###GateWay:Filter:Books
+POST http://localhost:9191/api/v1/books
+Content-Type: application/json
+
+{
+  "httpMethod": "GET",
+  "queryParams": {
+    "name": ["Orgullo"],
+    "author": ["Austen"]
+  }
+}
+
+###Gateway:Create:Books
+POST http://localhost:9191/api/v1/books
+Content-Type: application/json
+
+{
+  "httpMethod": "POST",
+  "body": {
+    "name": "Satanás",
+    "isbn":  "978-9584273543",
+    "image": "https://m.media-amazon.com/images/I/51aLugneWML._SY342_.jpg",
+    "author": "Mario Mendoza",
+    "releaseYear": 2018,
+    "language": "Español",
+    "rate": 4.6,
+    "available": true
+  }
+}
+
+###Gateway:Update:Books
+POST http://localhost:9191/api/v1/books/7227649e-297d-4081-8227-80ad4391006c
+Content-Type: application/json
+
+{
+  "httpMethod": "PUT",
+  "body": {
+    "name": "Orgullo y Prejuicio",
+    "isbn":  "978-0141439518",
+    "image": "https://images-na.ssl-images-amazon.com/images/I/81bR4c6y5-L.jpg",
+    "author": "Jane Austen",
+    "releaseYear": 1813,
+    "language": "Español",
+    "rate": 4.6,
+    "available": true
+  }
+}
+
+###Gateway:Verify:Books
+POST http://localhost:9191/api/v1/books/verify
+Content-Type: application/json
+
+{
+  "httpMethod": "POST",
+  "body": {
+    "booksID": ["7227649e-297d-4081-8227-80ad4391006c"]
+  }
+}
+
+###Gateway:Request:Books
+POST http://localhost:9191/api/v1/books/request
+Content-Type: application/json
+
+{
+  "httpMethod": "POST",
+  "body": {
+    "booksID": ["7227649e-297d-4081-8227-80ad4391006c"]
+  }
+}
+
+###Gateway:ChangeAvailability:Books
+POST http://localhost:9191/api/v1/books/availability
+Content-Type: application/json
+
+{
+  "httpMethod": "PATCH",
+  "body": {
+    "booksID": ["651ac4b6-f67f-4f64-a73e-4a864959be4f"]
+  }
+}
+
+###Gateway:GetAll:Requests
+POST http://localhost:9191/api/v1/requests/all
+Content-Type: application/json
+
+{
+  "httpMethod": "GET"
+}
+
+###Gateway:Create:Requests
+POST http://localhost:9191/api/v1/requests/create
+Content-Type: application/json
+
+{
+  "httpMethod": "POST",
+  "body": {
+    "booksID": ["651ac4b6-f67f-4f64-a73e-4a864959be4f"]
+  }
+}
+
+###Gateway:Create:Requests
+POST http://localhost:9191/api/v1/requests/491472ba-fd1b-4d15-9a90-f3ba3e79be33
+Content-Type: application/json
+
+{
+  "httpMethod": "DELETE"
+}

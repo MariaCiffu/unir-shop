@@ -19,7 +19,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults (level = AccessLevel.PRIVATE)
 @Setter
 @Getter
 public class Request {
@@ -28,6 +28,6 @@ public class Request {
     @Embedded
     DateInfo dateInfo;
     @ElementCollection
-    @Column(name = "books_id")
+    @Column (name = "books_id")
     List<UUID> booksID;
 }

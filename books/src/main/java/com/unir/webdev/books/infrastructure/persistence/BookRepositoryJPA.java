@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
+
 @Repository
-public interface BookRepositoryJPA extends JpaRepository<BookEntity, UUID>, JpaSpecificationExecutor<BookEntity> {
+public interface BookRepositoryJPA extends JpaRepository<BookEntity, UUID>,
+                                           JpaSpecificationExecutor<BookEntity> {
 
 }

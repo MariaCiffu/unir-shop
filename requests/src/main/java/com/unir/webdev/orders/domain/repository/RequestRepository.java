@@ -10,10 +10,16 @@ import java.util.UUID;
 @Repository
 public interface RequestRepository {
     void registerNewOrder(Request request);
+
     List<Request> getAllOrders();
+
     void deleteOrder(UUID uuid);
+
     Optional<Request> getRequestById(UUID id);
+
     boolean unknownRequest(UUID id);
+
     List<UUID> getBookIDsOfRequest(UUID id);
+
     boolean isEmptyRequest(UUID id);
 }

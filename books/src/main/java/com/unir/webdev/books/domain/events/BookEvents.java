@@ -7,5 +7,5 @@ import java.util.UUID;
 
 @Component
 public interface BookEvents {
-     boolean requestBooksCreation(List<UUID> booksID);
+    boolean requestBooksCreation(List<UUID> booksID);
 }

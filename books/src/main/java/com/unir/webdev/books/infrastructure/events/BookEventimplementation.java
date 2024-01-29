@@ -15,14 +15,14 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults (level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookEventimplementation implements BookEvents {
 
     RestTemplate restTemplate;
 
     @Override
     public boolean requestBooksCreation(List<UUID> booksID) {
-        String url = "http://requests:8081/api/v1/requests/create";
+        String url = "http://requests:8081/api/v1/requests";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         var requestEntity = new HttpEntity<>(new RequestCreation(booksID), headers);

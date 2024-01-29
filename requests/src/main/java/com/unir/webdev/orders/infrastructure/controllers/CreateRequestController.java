@@ -21,7 +21,14 @@ import java.util.Optional;
 public class CreateRequestController {
     RegisterNewRequestUseCase registerNewRequestUseCase;
 
-    @PostMapping ("/create")
+    private static ResponseEntity<Object> buildResponse(Result<String, Object> stringObjectResult) {
+        return stringObjectResult.isSuccess()
+               ? ResponseEntity.ok(stringObjectResult.getSuccess())
+               : ResponseEntity.badRequest()
+                               .body(stringObjectResult.getError());
+    }
+
+    @PostMapping ("")
     public ResponseEntity<?> handel(@RequestBody RequestCreation requestCreation) {
         return Optional.ofNullable(requestCreation)
                        .map(RequestCreation :: booksID)
@@ -30,13 +37,6 @@ public class CreateRequestController {
                        .map(CreateRequestController :: buildResponse)
                        .orElseGet(() -> ResponseEntity.badRequest()
                                                       .body("Bad Request given"));
-    }
-
-    private static ResponseEntity<Object> buildResponse(Result<String, Object> stringObjectResult) {
-        return stringObjectResult.isSuccess() ?
-               ResponseEntity.ok(stringObjectResult.getSuccess()) :
-               ResponseEntity.badRequest()
-                             .body(stringObjectResult.getError());
     }
 
 }

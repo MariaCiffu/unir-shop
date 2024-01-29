@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 public record ChangeAvailabilityRequest(List<UUID> booksID) {
-    @Contract(pure = true)
-    public boolean existBooks(){
+    @Contract (pure = true)
+    public boolean existBooks() {
         return booksID != null;
     }
 }

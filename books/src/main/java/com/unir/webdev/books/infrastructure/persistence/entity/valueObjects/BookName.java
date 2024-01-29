@@ -3,5 +3,4 @@ package com.unir.webdev.books.infrastructure.persistence.entity.valueObjects;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public record BookName(String bookName) {
-}
+public record BookName(String bookName) {}

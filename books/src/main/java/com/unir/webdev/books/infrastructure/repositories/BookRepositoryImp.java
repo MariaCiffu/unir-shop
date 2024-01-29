@@ -8,6 +8,7 @@ import com.unir.webdev.books.infrastructure.persistence.entity.valueObjects.Avai
 import com.unir.webdev.books.infrastructure.persistence.filter.BookSpec;
 import com.unir.webdev.books.infrastructure.persistence.mappers.BookMapper;
 import io.vavr.control.Either;
+import io.vavr.control.Try;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,7 +26,7 @@ public class BookRepositoryImp implements BookRepository {
     BookSpec bookSpec;
 
     @Override
-    public List<Book> getAllProducts() {
+    public List<Book> getAllBooks() {
         return bookRepositoryJPA.findAll()
                                 .stream()
                                 .map(BookMapper :: fromDbToDomain)
@@ -33,7 +34,7 @@ public class BookRepositoryImp implements BookRepository {
     }
 
     @Override
-    public List<Book> getAllProductsBy(String name, String author) {
+    public List<Book> getBooksBy(String name, String author) {
         return bookRepositoryJPA.findAll(bookSpec.filterColumns(name, author))
                                 .stream()
                                 .map(BookMapper :: fromDbToDomain)
@@ -46,22 +47,41 @@ public class BookRepositoryImp implements BookRepository {
     }
 
     @Override
-    public Either<Object, UUID> changeToUnavailability(UUID book) {
-        return Optional.of(book)
-                       .flatMap(bookRepositoryJPA :: findById)
-                       .map(BookEntity :: makeUnavailable)
-                        .map(bookRepositoryJPA :: save)
-                       .map(BookEntity :: bookId)
-                .map(Either :: right)
-                .orElse(Either.left(""));
+    public Either<String, UUID> changeToUnavailability(UUID book) {
+        return Try.of(() -> Optional.of(book)
+                                    .flatMap(bookRepositoryJPA :: findById)
+                                    .map(BookEntity :: makeUnavailable)
+                                    .map(bookRepositoryJPA :: save)
+                                    .map(BookEntity :: bookId)
+                                    .get())
+                  .toEither("Not changed Availability at DB");
     }
 
     @Override
-    public void changeAvailabilityOf(UUID book) {
-        Optional.ofNullable(book)
-                .flatMap(bookRepositoryJPA :: findById)
-                .map(BookEntity :: makeAvailable)
-                .ifPresent(bookRepositoryJPA :: save);
+    public UUID changeAvailabilityOf(UUID book) {
+        return Optional.of(book)
+                       .flatMap(bookRepositoryJPA :: findById)
+                       .map(BookEntity :: makeAvailable)
+                       .map(bookRepositoryJPA :: save)
+                       .map(BookEntity :: bookId)
+                       .orElseThrow(IllegalStateException :: new);
+    }
+
+    @Override
+    public Either<String, Book> updateBook(Book book) {
+        return Try.of(() -> bookRepositoryJPA.findById(book.bookId())
+                                             .get())
+                  .map(bookEntity -> bookEntity.updateEntity(BookMapper.fromDomainToDb(book)))
+                  .map(bookRepositoryJPA :: save)
+                  .map(BookMapper :: fromDbToDomain)
+                  .toEither("Not update possible at DB");
+    }
+
+    @Override
+    public Either<String, Book> createBook(Book book) {
+        return Try.of(() -> bookRepositoryJPA.save(BookMapper.fromDomainToDb(book)))
+                  .map(BookMapper :: fromDbToDomain)
+                  .toEither("Error to save at DB");
     }
 
 

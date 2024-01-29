@@ -5,11 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public sealed interface Result<S, E>  {
-    boolean isSuccess();
-    S getSuccess();
-    E getError();
-
+public sealed interface Result<S, E> {
     @Contract (value = "_ -> new", pure = true)
     static <S, E> @NotNull Result<S, E> success(S value) {
         return new Success<>(value);
@@ -19,6 +15,12 @@ public sealed interface Result<S, E>  {
     static <S, E> @NotNull Result<S, E> error(E error) {
         return new Error<>(error);
     }
+
+    boolean isSuccess();
+
+    S getSuccess();
+
+    E getError();
 
     final class Success<S, E> implements Result<S, E> {
         private final S value;

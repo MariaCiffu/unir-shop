@@ -7,15 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RequestMapper {
     public Request adaptDomainToDb(com.unir.webdev.orders.domain.Request request) {
-        return new Request(
-                request.getId(),
-                new DateInfo(request.getDateInfo().creationDate()),
-                request.getBooksID());
+        return new Request(request.getId(), new DateInfo(request.getDateInfo()
+                                                                .creationDate()),
+                           request.getBooksID());
     }
+
     public com.unir.webdev.orders.domain.Request adaptDbToDomain(Request request) {
-        return new com.unir.webdev.orders.domain.Request(
-                request.getId(),
-                new com.unir.webdev.orders.domain.valueObjects.DateInfo(request.getDateInfo().creationDate()),
-                request.getBooksID());
+        return new com.unir.webdev.orders.domain.Request(request.getId(),
+                                                         new com.unir.webdev.orders.domain.valueObjects.DateInfo(request.getDateInfo()
+                                                                                                                                         .creationDate()), request.getBooksID());
     }
 }

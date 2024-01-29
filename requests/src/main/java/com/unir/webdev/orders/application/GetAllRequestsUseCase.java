@@ -11,10 +11,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults (makeFinal = true, level = AccessLevel.PRIVATE)
 public class GetAllRequestsUseCase {
     RequestRepository requestRepository;
-    public List<Request> getAllRequest(){
+
+    public List<Request> getAllRequest() {
         return requestRepository.getAllOrders();
     }
 }

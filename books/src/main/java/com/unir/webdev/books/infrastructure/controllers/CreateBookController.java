@@ -2,6 +2,7 @@ package com.unir.webdev.books.infrastructure.controllers;
 
 import com.unir.webdev.books.application.CreateBookUseCase;
 import com.unir.webdev.books.domain.Book;
+import com.unir.webdev.books.infrastructure.controllers.DTO.CreateBookRequest;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
 import lombok.AccessLevel;
@@ -23,7 +24,7 @@ public class CreateBookController {
 
     @NotNull
     private static ResponseEntity<String> buildResponse(Either<String, Book> books) {
-        return books.isLeft() ? ResponseEntity.badRequest()
+        return books.isLeft() ? ResponseEntity.internalServerError()
                                               .body("Data " + "unprocessable")
                               : ResponseEntity.ok()
                                               .body("book created");
@@ -43,7 +44,7 @@ public class CreateBookController {
                      .map(CreateBookController :: requestToDomain)
                      .map(createBookUseCase :: createBook)
                      .map(CreateBookController :: buildResponse)
-                     .getOrElse(ResponseEntity.badRequest()
+                     .getOrElse(ResponseEntity.unprocessableEntity()
                                               .body("Invalid data"));
     }
 }

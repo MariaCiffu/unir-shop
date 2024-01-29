@@ -23,8 +23,8 @@ public class RequestBooksController {
     RequestBookUseCase requestBookUseCase;
 
     @NotNull
-    private static ResponseEntity<String> buildResponse(Either<String, Boolean> booleans) {
-        return booleans.isLeft() ? ResponseEntity.badRequest()
+    private static ResponseEntity<String> buildResponse(@NotNull Either<String, Boolean> booleans) {
+        return booleans.isLeft() ? ResponseEntity.internalServerError()
                                                  .body(booleans.getLeft())
                                  : ResponseEntity.ok("Request successfully");
     }
@@ -38,7 +38,7 @@ public class RequestBooksController {
                      .map(booksId -> requestBookUseCase.requestBooks(booksId))
                      .map(RequestBooksController :: buildResponse)
                      .getOrElse(ResponseEntity.badRequest()
-                                              .body("Not Required data"));
+                                              .body("invalid data"));
     }
 
 }

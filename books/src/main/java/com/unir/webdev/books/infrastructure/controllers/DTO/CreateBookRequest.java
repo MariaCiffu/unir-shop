@@ -1,4 +1,4 @@
-package com.unir.webdev.books.infrastructure.controllers;
+package com.unir.webdev.books.infrastructure.controllers.DTO;
 
 public record CreateBookRequest(
         String name, String isbn, String image, String author, Integer releaseYear,

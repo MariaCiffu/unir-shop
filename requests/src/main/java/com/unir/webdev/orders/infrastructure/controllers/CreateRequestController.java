@@ -3,6 +3,11 @@ package com.unir.webdev.orders.infrastructure.controllers;
 import com.unir.webdev.orders.application.RegisterNewRequestUseCase;
 import com.unir.webdev.orders.domain.response.Result;
 import com.unir.webdev.orders.infrastructure.controllers.dto.RequestCreation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +33,20 @@ public class CreateRequestController {
                                .body(stringObjectResult.getError());
     }
 
-    @PostMapping ("")
-    public ResponseEntity<?> handel(@RequestBody RequestCreation requestCreation) {
+    @PostMapping("")
+    @Operation (summary = "Create Request", description = "Register a new request in the system")
+    @ApiResponses (value = {
+            @ApiResponse (responseCode = "200", description = "Request created successfully",
+                          content = { @Content (mediaType = "application/json",
+                                                schema = @Schema (implementation = Object.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad Request, invalid data provided",
+                         content = @Content)
+    })
+    public ResponseEntity<?> handel(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "RequestCreation object containing the details of the request",
+                                                                  required = true, content = @Content(schema = @Schema(implementation = RequestCreation.class)))
+            @RequestBody RequestCreation requestCreation
+                                   ) {
         return Optional.ofNullable(requestCreation)
                        .map(RequestCreation :: booksID)
                        .filter(booksID -> ! booksID.isEmpty())

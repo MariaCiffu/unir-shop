@@ -8,5 +8,4 @@ public record BooksIdVerificationRequest(List<UUID> booksID) {
         return booksID != null;
     }
 
-    ;
 }

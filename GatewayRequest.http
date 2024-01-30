@@ -39,13 +39,13 @@ Content-Type: application/json
 }
 
 ###Gateway:Update:Books
-POST http://localhost:9191/api/v1/books/7227649e-297d-4081-8227-80ad4391006c
+POST http://localhost:9191/api/v1/books/f6c0cc33-f8b4-4d1d-aeec-fd14d62621ad
 Content-Type: application/json
 
 {
   "httpMethod": "PUT",
   "body": {
-    "name": "Orgullo y Prejuicio",
+    "name": "Orgullo y Prejuizio",
     "isbn":  "978-0141439518",
     "image": "https://images-na.ssl-images-amazon.com/images/I/81bR4c6y5-L.jpg",
     "author": "Jane Austen",
@@ -63,7 +63,7 @@ Content-Type: application/json
 {
   "httpMethod": "POST",
   "body": {
-    "booksID": ["7227649e-297d-4081-8227-80ad4391006c"]
+    "booksID": ["f6c0cc33-f8b4-4d1d-aeec-fd14d62621ad"]
   }
 }
 
@@ -74,7 +74,7 @@ Content-Type: application/json
 {
   "httpMethod": "POST",
   "body": {
-    "booksID": ["7227649e-297d-4081-8227-80ad4391006c"]
+    "booksID": ["f6c0cc33-f8b4-4d1d-aeec-fd14d62621ad"]
   }
 }
 
@@ -109,7 +109,7 @@ Content-Type: application/json
 }
 
 ###Gateway:Create:Requests
-POST http://localhost:9191/api/v1/requests/491472ba-fd1b-4d15-9a90-f3ba3e79be33
+POST http://localhost:9191/api/v1/requests/d7fefb2e-86d2-4295-b0d7-2e68326d0339
 Content-Type: application/json
 
 {

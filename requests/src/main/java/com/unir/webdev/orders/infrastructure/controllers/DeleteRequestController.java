@@ -2,6 +2,12 @@ package com.unir.webdev.orders.infrastructure.controllers;
 
 import com.unir.webdev.orders.application.DeleteRequestsUseCase;
 import com.unir.webdev.orders.domain.response.Result;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,7 +36,18 @@ public class DeleteRequestController {
     }
 
     @DeleteMapping("/{requestID}")
-    public ResponseEntity<?> deleteRequest(@PathVariable UUID requestID) {
+    @Operation (summary = "Delete Request", description = "Delete a request from the system by its ID")
+    @ApiResponses (value = {
+            @ApiResponse (responseCode = "200", description = "Request deleted successfully",
+                          content = { @Content (mediaType = "application/json",
+                                                schema = @Schema (implementation = String.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad Request, the operation could not be completed",
+                         content = @Content)
+    })
+    public ResponseEntity<?> deleteRequest(
+            @Parameter (description = "UUID of the request to be deleted", required = true)
+            @PathVariable UUID requestID
+                                          ) {
         return Optional.ofNullable(requestID)
                        .map(deleteRequestsUseCase :: deleteRequest)
                        .map(DeleteRequestController :: buildResponse)
